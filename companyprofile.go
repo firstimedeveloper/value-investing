@@ -1,17 +1,15 @@
-package main
+package companyProfile
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/firstimedeveloper/value-investing"
 	"io/ioutil"
 	"net/http"
 )
 
 type Company struct {
-	Profile      Profile `json:"CSCO"`
-	BalanceSheet balanceSheet.BalanceSheet
+	Profile Profile `json:"CSCO"`
 }
 type Profile struct {
 	Price       float64     `json:"Price"`
@@ -35,7 +33,15 @@ type Profile struct {
 	Image       string      `json:"image"`
 }
 
-func main() {
+func (c Company) companyProfile() {
+
+	// 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// 		fmt.Fprintf(w, "Hello world")
+	// 	})
+
+	// 	port := "8080"
+
+	// 	fmt.Println(http.ListenAndServe(":"+port, nil))
 
 	value := Company{}
 	url := "https://financialmodelingprep.com/api/company/profile/CSCO"
@@ -57,4 +63,5 @@ func main() {
 	}
 
 	fmt.Println(value)
+	fmt.Println(resp.Body)
 }

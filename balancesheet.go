@@ -41,8 +41,9 @@ type BalanceSheet struct {
 		NetDebt                     string `json:"Net Debt"`
 	} `json:"financials"`
 }
+func (b BalanceSheet) getData()cd
 
-func (b BalanceSheet) balanceSheet() {
+func (b BalanceSheet) getBalanceSheets() {
 
 	value := BalanceSheet{}
 	url := "https://financialmodelingprep.com/api/financials/balance-sheet-statement/AAPL?period=quarter"
