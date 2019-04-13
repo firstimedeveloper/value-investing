@@ -1,4 +1,4 @@
-package companyProfile
+package cp
 
 import (
 	"bytes"

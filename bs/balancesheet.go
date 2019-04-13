@@ -1,4 +1,4 @@
-package balanceSheet
+package bs
 
 import (
 	"bytes"
