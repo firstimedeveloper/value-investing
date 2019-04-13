@@ -36,7 +36,6 @@ type Profile struct {
 
 func (c *Company) getData(companyName string) error {
 	url := fmt.Sprintf("https://financialmodelingprep.com/api/company/profile/%s", companyName)
-	fmt.Printf(url)
 	resp, err := http.Get(url)
 	if err != nil {
 		return errors.Wrap(err, "could not get url")
