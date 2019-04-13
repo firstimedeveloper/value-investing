@@ -45,7 +45,6 @@ type BalanceSheet struct {
 
 func (b *BalanceSheet) getData(companyName string) error {
 	url := fmt.Sprintf("https://financialmodelingprep.com/api/financials/balance-sheet-statement/%s?period=quarter", companyName)
-	fmt.Printf(url)
 	resp, err := http.Get(url)
 	if err != nil {
 		return errors.Wrap(err, "could not get url")
