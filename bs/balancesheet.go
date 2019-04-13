@@ -3,7 +3,6 @@ package bs
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -41,32 +40,35 @@ type BalanceSheet struct {
 		NetDebt                     string `json:"Net Debt"`
 	} `json:"financials"`
 }
-func (b BalanceSheet) getData()cd
 
-func (b BalanceSheet) getBalanceSheets() {
-
-	value := BalanceSheet{}
-	url := "https://financialmodelingprep.com/api/financials/balance-sheet-statement/AAPL?period=quarter"
+func (b *BalanceSheet) getData(url string) error {
 	resp, _ := http.Get(url)
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic(err.Error())
+		return err
 	}
 
 	//need this cause the json provided by the api is shitty
 	body = bytes.TrimPrefix(body, []byte{60, 112, 114, 101, 62})
 	body = bytes.TrimSuffix(body, []byte{60, 112, 114, 101, 62})
 
-	err = json.Unmarshal(body, &value)
+	b.unmarshallJSON(body)
+
+	return nil
+}
+
+func (b *BalanceSheet) unmarshallJSON(data []byte) error {
+	err := json.Unmarshal(data, &b)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
+	return nil
+}
 
-	//fmt.Println(value)
+func (b BalanceSheet) CompanyBS(url string) *BalanceSheet {
+	b.getData(url)
+	return &b
 
-	for _, i := range value.Financials {
-		fmt.Printf("%s %s\n", i.Date, i.TotalAssets)
-	}
 }

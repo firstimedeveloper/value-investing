@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
 )
@@ -33,35 +34,42 @@ type Profile struct {
 	Image       string      `json:"image"`
 }
 
-func (c Company) companyProfile() {
-
-	// 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	// 		fmt.Fprintf(w, "Hello world")
-	// 	})
-
-	// 	port := "8080"
-
-	// 	fmt.Println(http.ListenAndServe(":"+port, nil))
-
-	value := Company{}
-	url := "https://financialmodelingprep.com/api/company/profile/CSCO"
-	resp, _ := http.Get(url)
+func (c *Company) getData(companyName string) error {
+	url := fmt.Sprintf("https://financialmodelingprep.com/api/company/profile/%s", companyName)
+	fmt.Printf(url)
+	resp, err := http.Get(url)
+	if err != nil {
+		return errors.Wrap(err, "could not get url")
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic(err.Error())
+		return errors.Wrap(err, "could not read response body")
 	}
 
 	//need this cause the json provided by the api is shitty
 	body = bytes.TrimPrefix(body, []byte{60, 112, 114, 101, 62})
 	body = bytes.TrimSuffix(body, []byte{60, 112, 114, 101, 62})
 
-	err = json.Unmarshal(body, &value)
+	err = json.Unmarshal(body, &c)
 	if err != nil {
-		fmt.Println(err)
+		return errors.Wrap(err, "could not unmarshall json")
 	}
 
-	fmt.Println(value)
-	fmt.Println(resp.Body)
+	return nil
 }
+
+func (c Company) CompanyProfile(companyName string) *Company {
+	c.getData(companyName)
+
+	return &c
+}
+
+// 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+// 		fmt.Fprintf(w, "Hello world")
+// 	})
+
+// 	port := "8080"
+
+// 	fmt.Println(http.ListenAndServe(":"+port, nil))
